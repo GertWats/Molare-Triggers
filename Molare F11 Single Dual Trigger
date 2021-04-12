@@ -1,0 +1,47 @@
+#include <Keyboard.h>
+
+int SensorPin = 2;  // Set Sensor Pin
+
+bool Leg1Trigger = false;
+bool Leg2Trigger = false;
+bool LegGap = false;
+
+void setup()
+{
+  pinMode(SensorPin, INPUT);  // Sensor as an input
+  digitalWrite(SensorPin, HIGH);  // Sensor to 0V
+}
+
+void loop()
+{
+  if (digitalRead(SensorPin) == 0)  // Leg 1 Trigger
+  {
+    Leg1Trigger = true;
+  }
+
+  if (digitalRead(SensorPin) > 0) // Leg 1 DeTrigger
+  {
+    LegGap = true;
+  }
+
+  if(Leg1Trigger == true && LegGap == true)
+  {
+    Keyboard.write('a'); // Trigger Reading Action (ASCII shortcut)
+  }
+
+  if(digitalRead(SensorPin) == 0 && LegGap == true) // Leg 2 Trigger
+  { 
+    Leg2Trigger = true;
+  }
+
+  if(Leg1Trigger == true && Leg2Trigger == true)
+  {
+    Keyboard.write('b'); // Trigger Capturing Action with (ASCII shortcut)
+   
+    Leg1Trigger = false;
+    Leg2Trigger = false;
+    LegGap = false;
+  }
+    
+    delay(500);
+}
